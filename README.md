@@ -1,6 +1,5 @@
 # go-ratelimiter
-Scalable golang ratelimiter using the sliding window algorithm. Currently supports only Redis. All operations are atomic.
-
+Scalable golang ratelimiter using the sliding window algorithm. Currently supports only Redis.
 ## Example usage
 ```
 	client := redis.NewClient(&redis.Options{
