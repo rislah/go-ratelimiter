@@ -66,7 +66,11 @@ func (r *Ratelimiter) ShouldThrottle(ctx context.Context, w http.ResponseWriter,
 	}
 
 	if r.writeHeaders {
-		remainingStr := strconv.Itoa(remaining(currentCounter, r.limitPerMinute))
+		remainingCount := currentCounter
+		if !throttled {
+			remainingCount++
+		}
+		remainingStr := strconv.Itoa(remaining(remainingCount, r.limitPerMinute))
 		limitStr := strconv.Itoa(r.limitPerMinute)
 		resetStr := strconv.Itoa(earliestExp)
 		w.Header().Add("RateLimit-Limit", limitStr)

@@ -11,14 +11,16 @@ type Datastore interface {
 }
 
 func bucketsByTime(bucketInterval time.Duration, expireTime, now time.Time) []string {
+	maxBuckets := 1000
 	buckets := []string{}
-	for bucket := expireTime; bucket.After(now); bucket = bucket.Add(-1 * bucketInterval) {
+	
+	for bucket := expireTime; bucket.After(now) && len(buckets) < maxBuckets; bucket = bucket.Add(-1 * bucketInterval) {
 		bucketUnix := int(bucket.Unix())
 		buckets = append(buckets, strconv.Itoa(bucketUnix))
 	}
-
 	return buckets
 }
+
 func ttlSecondsFromExpirationTime(expireTime, now time.Time) int {
 	return int(expireTime.Sub(now) / time.Second)
 }

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"reflect"
 	"sync"
 	"time"
 
@@ -89,26 +88,37 @@ func (d *redisDataStoreImpl) IncrementSlidingWindow(ctx context.Context, field s
 		return 0, false, 0, err
 	}
 
-	counter, ok := res[0].(int64)
-	if !ok {
-		return 0, false, 0, errors.New(fmt.Sprintf("failed to cast counter: %v", reflect.TypeOf(counter)))
+	counter, err := toInt(res[0])
+	if err != nil {
+		return 0, false, 0, err
 	}
 
-	throttle, ok := res[1].(int64)
-	if !ok {
-		return 0, false, 0, errors.New(fmt.Sprintf("failed to cast throttle: %v", reflect.TypeOf(throttle)))
+	throttleVal, err := toInt(res[1])
+	if err != nil {
+		return 0, false, 0, err
 	}
 
-	earliestExp, ok := res[2].(int64)
-	if !ok {
-		return 0, false, 0, errors.New(fmt.Sprintf("failed to cast earliestExp: %v", reflect.TypeOf(earliestExp)))
+	earliestExp, err := toInt(res[2])
+	if err != nil {
+		return 0, false, 0, err
 	}
 
-	earliestExpTime := time.Unix(earliestExp, 0)
+	earliestExpTime := time.Unix(int64(earliestExp), 0)
 	earliestExpSecs := int(earliestExpTime.Sub(now) / time.Second)
 	if earliestExpSecs < 0 {
 		earliestExpSecs = ttl
 	}
 
-	return int(counter), throttle == 1, earliestExpSecs, nil
+	return counter, throttleVal == 1, earliestExpSecs, nil
+}
+
+func toInt(val interface{}) (int, error) {
+	switch v := val.(type) {
+	case int64:
+		return int(v), nil
+	case float64:
+		return int(v), nil
+	default:
+		return 0, fmt.Errorf("unexpected type: %T", val)
+	}
 }
