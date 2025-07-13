@@ -75,19 +75,3 @@ else
     set_expiry()
 end
 ```
-
-### Performance Characteristics
-| Aspect          | Benefit                          |
-|-----------------|----------------------------------|
-| Bucket size     | Balances precision vs memory use |
-| Lua scripting   | Atomic operations                | 
-| Hash storage    | Efficient counter grouping       |
-| TTL management  | Automatic data cleanup           |
-
-## Comparison to Other Algorithms
-| Algorithm       | Advantages                      | Disadvantages               |
-|-----------------|---------------------------------|-----------------------------|
-| Fixed Window    | Simple implementation           | Burst traffic at boundaries |
-| Token Bucket    | Smooths request bursts          | Complex distributed sync    |
-| Sliding Log     | Perfect accuracy                | High memory usage           |
-| **This System** | Balanced accuracy/performance   | Slightly higher Redis load  |
