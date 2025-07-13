@@ -54,7 +54,7 @@ throttled, err := rl.ShouldThrottle(context.Background(), nil, ratelimiter.Field
 ```
 
 ## Headers
-When enabled, complies with [draft-polli-ratelimit-headers](https://tools.ietf.org/id/draft-polli-ratelimit-headers-00.html):
+When enabled, complies with [draft-polli-ratelimit-headers](https://datatracker.ietf.org/doc/html/draft-polli-ratelimit-headers-00):
 ```
 RateLimit-Limit: 10         # Maximum allowed requests
 RateLimit-Remaining: 3      # Requests left in window  
