@@ -2,7 +2,6 @@ package ratelimiter
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"sync"

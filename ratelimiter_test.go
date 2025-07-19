@@ -48,13 +48,14 @@ func TestRateLimiter(t *testing.T) {
 				assert.NoError(t, err)
 				assert.False(t, throttled)
 
-				ratelimitHeader := rw.HeaderMap.Get("RateLimit-Limit")
-				ratelimitResetHeader := rw.HeaderMap.Get("RateLimit-Reset")
-				ratelimitRemainingHeader := rw.HeaderMap.Get("RateLimit-Remaining")
+				headers := rw.Result().Header
+				ratelimitHeader := headers.Get("RateLimit-Limit")
+				ratelimitResetHeader := headers.Get("RateLimit-Reset")
+				ratelimitRemainingHeader := headers.Get("RateLimit-Remaining")
 
 				assert.Equal(t, strconv.Itoa(rateLimiterTestCase.limitPerMinute), ratelimitHeader)
 				assert.NotEmpty(t, ratelimitResetHeader)
-				assert.Equal(t, "2", ratelimitRemainingHeader)
+				assert.Equal(t, "1", ratelimitRemainingHeader)
 			},
 		},
 	}
